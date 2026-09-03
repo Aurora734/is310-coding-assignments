@@ -4,7 +4,7 @@
 
 1. Python
 
-![Python Installation](fix this spot later)
+![Python Installation](images/python-installation.jpg)
 
 2. Git
 
@@ -12,7 +12,7 @@
 
 3. VS Code
 
-![VS Code Installation](C:\Users\mbwhi\is310-coding-assignments\images\vscode-installation.jpg)
+![VS Code Installation](images/vscode-installation.jpg)
 
 4. Hypothesis Username: Auroraj3
 
