@@ -8,7 +8,7 @@
 
 2. Git
 
-![Git Installation](C:\Users\mbwhi\is310-coding-assignments\images\git-installation.jpg)
+![Git Installation](images\git-installation.jpg)
 
 3. VS Code
 
