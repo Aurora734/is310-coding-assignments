@@ -8,7 +8,7 @@
 
 2. Git
 
-![Git Installation](images\git-installation.jpg)
+![Git Installation](images/git-installation.jpg)
 
 3. VS Code
 
