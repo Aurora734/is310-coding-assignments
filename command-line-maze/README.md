@@ -1,0 +1,1 @@
+if you're a Windows' PowerShell user, first run this command .\hide-dotfiles.ps1
