@@ -7,16 +7,16 @@ Upon further research, I have found the CLARIN-NL website (see Figure 3), which 
 Unfortunately, I couldn't really find more information about who all was involved/in what way (that is, as of yet). I also couldn't find details on who specifically was involved in creating the website for the project, nor could I locate a GitHub page related to the project. I will be continuing to look into this as the semester progresses though!
 
 Figure 1:
-![Figure 1]()
+![Figure 1](images/Arthurian_Fiction_Figure_1.jpg)
 
 Figure 2:
-![Figure 2]()
+![Figure 2](images/Arthurian_Fiction_Figure_2.jpg)
 
 Figure 3:
-![Figure 3]()
+![Figure 3](images/Arthurian_Fiction_Figure_3.jpg)
 
 Figure 4:
-![Figure 4]()
+![Figure 4](images/Arthurian_Fiction_Figure_4.jpg)
 
 Figure 5:
-![Figure 5]()
+![Figure 5](images/Arthurian_Fiction_Figure_5.jpg)
