@@ -1,0 +1,26 @@
+[
+    {
+        "title": "The Matrix",
+        "release_year": 1999,
+        "genre": "science fiction",
+        "curator_note": "Uses simulated reality to question how people know what is real."
+    },
+    {
+        "title": "Star Wars",
+        "release_year": 1977,
+        "genre": "space opera",
+        "curator_note": "Combines science-fiction imagery with mythic storytelling."
+    },
+    {
+        "title": "Back to the Future",
+        "release_year": 1985,
+        "genre": "science fiction",
+        "curator_note": "Quintessential time travel blockbuster"
+    },
+    {
+        "title": "Lord of the Rings: The Fellowship of the Ring",
+        "release_year": 2001,
+        "genre": "fantasy epic",
+        "curator_note": "first live action adaptation of J.R.R. Tolkien's literary masterpiece"
+    }
+]
