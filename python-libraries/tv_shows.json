@@ -1,0 +1,26 @@
+[
+    {
+        "title": "Friends",
+        "release_start": 1994,
+        "release_end": 2004,
+        "seasons_count": 10,
+        "genre": "situational comedy",
+        "premise": "six friends lives in NYC through their twenties and thirties"
+    },
+    {
+        "title": "Buffy the Vampire Slayer",
+        "release_start": 1997,
+        "release_end": 2003,
+        "seasons_count": 7,
+        "genre": "vampire horror",
+        "premise": "a girl with the power to slay vampires must protect the world from demons"
+    },
+    {
+        "title": "Community",
+        "release_start": 2009,
+        "release_end": 2015,
+        "seasons_count": 6,
+        "genre": "meta comedy",
+        "premise": "life at a community college filled with homages to other movies and shows"
+    }
+]
