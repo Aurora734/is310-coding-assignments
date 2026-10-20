@@ -24,10 +24,28 @@ links = soup.find_all('a')
     # print(link.get_text())
 
 paragraphs = soup.find_all('p')
-for paragraph in paragraphs:
+# for paragraph in paragraphs:
     # print(paragraph.get_text())
     # print(paragraph.name)
     # print(paragraph.attrs)
     # print(paragraph.next_sibling)
-    print(paragraph.parent)
+    # print(paragraph.parent)
+
+
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(open("top_100_ebooks.html"), features="html.parser")
+
+# print(soup.prettify())
+
+# titles = soup.find_all('li')
+# for title in titles:
+    # print(title.get_text())
+
+
+from bs4 import BeautifulSoup
+import requests
+
+response = requests.get("https://www.gutenberg.org/browse/scores/top")
+print("Status code:", response.status_code)
+print("Headers:", response.headers)
 
