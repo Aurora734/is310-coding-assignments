@@ -48,4 +48,3 @@ import requests
 response = requests.get("https://www.gutenberg.org/browse/scores/top")
 print("Status code:", response.status_code)
 print("Headers:", response.headers)
-
