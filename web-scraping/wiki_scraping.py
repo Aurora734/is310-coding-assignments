@@ -8,8 +8,8 @@ from rich.console import Console
 from rich.table import Table
 
 BASE_URL = "https://wiki.leagueoflegends.com" # The main address of the wiki, which we prepend to local links.
-ZAUN_LORE_URL = f"{BASE_URL}en-us/Category:Lore_of_Zaun"
-PILTOVER_LORE_URL = f"{BASE_URL}en-us/Category:Lore_of_Piltover"
+ZAUN_LORE_URL = f"{BASE_URL}/en-us/Category:Lore_of_Zaun"
+PILTOVER_LORE_URL = f"{BASE_URL}/en-us/Category:Lore_of_Piltover"
 HEADERS = {
 	"User-Agent": "is310-course-scraper/1.0 (student project; auroraj3@illinois.edu)"
 }
@@ -84,19 +84,23 @@ def scrape_artifacts(region_page, source_url):
             "artifact_url": f"{BASE_URL}{link['href']}"
         })
     
+    return artifacts
+
+# artifact origins
+def origin(artifacts):
     for artifact in artifacts:
         soup = fetch_soup(artifact["artifact_url"])
-        if content is None:
+        if soup is None:
             return artifacts # unsure about this line
 
-        artifact_format = artifact.find(id="duration").get_text()
+        artifact_format = soup.find(id="duration").get_text()
         if artifact_format is None:
             return artifacts # IDK!!!!!!!
 
         else:
-            artifact.append({"format": artifact_format})
+            artifact["format"] = artifact_format
 
-        cat_links = artifact.find(id="mw-normal-catlinks")
+        cat_links = soup.find(id="mw-normal-catlinks")
         
         origin_zaun = cat_links.find(title="Category: Lore of Zaun")
         origin_piltover = cat_links.find(title="Category: Lore of Piltover")
@@ -127,16 +131,23 @@ def scrape_artifacts(region_page, source_url):
             else:
                 return artifacts ## really unsure about this line
     
-    return artifacts
+    return
+
+
 
 # make counts
-
+#def count_formats():
+    #for 
 
 # make table
 
 
 zaun_page = fetch_soup(ZAUN_LORE_URL)
-zaun_artifacts = scrape_lore(zaun_page, ZAUN_LORE_URL)
+zaun_artifacts = scrape_artifacts(zaun_page, ZAUN_LORE_URL)
+origin(zaun_artifacts)
 
 piltover_page = fetch_soup(PILTOVER_LORE_URL)
-piltover_artifacts = scrape_lore(piltover_page, PILTOVER_LORE_URL)
+piltover_artifacts = scrape_artifacts(piltover_page, PILTOVER_LORE_URL)
+origin(piltover_artifacts)
+
+print(zaun_total)
