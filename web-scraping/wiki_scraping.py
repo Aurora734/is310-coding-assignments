@@ -93,10 +93,9 @@ def origin(artifacts):
         if soup is None:
             return artifacts # unsure about this line
 
-        artifact_format = soup.find(id="duration").get_text()
+        artifact_format = soup.find(id="duration").get_text()        
         if artifact_format is None:
             return artifacts # IDK!!!!!!!
-
         else:
             artifact["format"] = artifact_format
 
@@ -108,46 +107,43 @@ def origin(artifacts):
         if origin_zaun is not None:
             if artifact not in zaun_total:
                 zaun_total.append(artifact)
-
             if origin_piltover is None:
                 if artifact not in zaun_alone:
                     zaun_alone.append(artifact)
-
             else:
                 if artifact not in piltover_total:
                     piltover_total.append(artifact)
-                
                 if artifact not in both:
-                    both.append(artifact)
-        
+                    both.append(artifact) 
+        elif origin_piltover is not None:
+            if artifact not in piltover_total:
+                piltover_total.append(artifact)
+            if artifact not in piltover_alone:
+                piltover_alone.append(artifact)
         else:
-            if origin_piltover is not None:
-                if artifact not in piltover_total:
-                    piltover_total.append(artifact)
-            
-                if artifact not in piltover_alone:
-                    piltover_alone.append(artifact)
-            
-            else:
                 return artifacts ## really unsure about this line
-    
+
+        print(artifact_format)
+
     return
 
 
 
 # make counts
-#def count_formats():
-    #for 
+# def count_formats(artifacts):
+    # for artifact in artifacts:
+
 
 # make table
 
 
 zaun_page = fetch_soup(ZAUN_LORE_URL)
 zaun_artifacts = scrape_artifacts(zaun_page, ZAUN_LORE_URL)
+# print(zaun_artifacts)
 origin(zaun_artifacts)
 
 piltover_page = fetch_soup(PILTOVER_LORE_URL)
 piltover_artifacts = scrape_artifacts(piltover_page, PILTOVER_LORE_URL)
 origin(piltover_artifacts)
 
-print(zaun_total)
+# print(zaun_total)
