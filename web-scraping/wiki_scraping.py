@@ -128,7 +128,7 @@ def origin(artifacts):
 
 # make counts
 
-def count(formats):
+def count_formats(formats):
     quantities = {}
     short_story_count = 0
 
@@ -145,6 +145,18 @@ def count(formats):
 
     return quantities
 
+def count_totals(formats):
+    total = 0
+    entry_check = []
+
+    for entry in formats:
+        if entry not in entry_check:
+            entry_check.append(entry)
+            total = total + formats.count(entry)
+
+    return total
+
+
 # get content??
 
 zaun_page = fetch_soup(ZAUN_LORE_URL)
@@ -155,11 +167,11 @@ piltover_page = fetch_soup(PILTOVER_LORE_URL)
 piltover_artifacts = scrape_artifacts(piltover_page, PILTOVER_LORE_URL)
 origin(piltover_artifacts)
 
-total_z_count = count(zaun_total)
-total_p_count = count(piltover_total)
-solely_z_count = count(zaun_alone)
-solely_p_count = count(piltover_alone)
-overlap_count = count(both)
+total_z_count = count_formats(zaun_total)
+total_p_count = count_formats(piltover_total)
+solely_z_count = count_formats(zaun_alone)
+solely_p_count = count_formats(piltover_alone)
+overlap_count = count_formats(both)
 
 # make list of all possible formats
 
@@ -231,21 +243,17 @@ for form in all_formats:
 
 totals_row = {
     "format": "Total",
-    "solely zaun": str(zaun_alone.index(zaun_alone[-1]) + 1),
-    "zaun total": str(zaun_total.index(zaun_total[-1]) + 1),
-    "overlap": str(both.index(both[-1]) + 1),
-    "piltover total": str(piltover_total.index(piltover_total[-1]) + 1),
-    "solely piltover": str(piltover_alone.index(piltover_alone[-1]) + 1),
+    "solely zaun": str(count_totals(zaun_alone)),
+    "zaun total": str(count_totals(zaun_total)),
+    "overlap": str(count_totals(both)),
+    "piltover total": str(count_totals(piltover_total)),
+    "solely piltover": str(count_totals(piltover_alone)),
     "total": str(
-        (zaun_alone.index(zaun_alone[-1]) + 1)
+        count_totals(zaun_alone)
         +
-        (zaun_total.index(zaun_total[-1]) + 1)
+        count_totals(both)
         +
-        (both.index(both[-1]) + 1)
-        +
-        (piltover_total.index(piltover_total[-1]) + 1)
-        +
-        (piltover_alone.index(piltover_alone[-1]) + 1) 
+        count_totals(piltover_alone) 
     )
 }
 
