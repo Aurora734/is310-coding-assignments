@@ -29,8 +29,8 @@ PLAN
  - analyze subpages CHECK
     - find each page's artifact format
     - find each page's origin (z, p, or both)
- - make counts based on origin
-    - 
+ - make counts based on origin CHECK
+ - make list of all formats CHECK
  - making the table
     - 
  - make file!!
@@ -57,12 +57,6 @@ def fetch_soup(url):
 # Scrape subpages
 ## just getting a list of dictionaries of the pages' info
 
-zaun_total = []
-piltover_total = []
-zaun_alone = []
-piltover_alone = []
-both = []
-
 def scrape_artifacts(region_page, source_url):
     artifacts = []
     if region_page is None:
@@ -77,8 +71,7 @@ def scrape_artifacts(region_page, source_url):
         link = item.find("a", href=True)
         if link is None:
             continue
-        ## IMPORTANT!!! Need to figure out how to avoid 
-            #repeats across multiple calls of this function
+
         artifacts.append({
             "artifact": link.get_text(" ", strip=True),
             "artifact_url": f"{BASE_URL}{link['href']}"
@@ -87,7 +80,15 @@ def scrape_artifacts(region_page, source_url):
     return artifacts
 
 # artifact origins
+
+zaun_total = []
+piltover_total = []
+zaun_alone = []
+piltover_alone = []
+both = []
+
 def origin(artifacts):
+    # takes list of dictionaries
     for artifact in artifacts:
         soup = fetch_soup(artifact["artifact_url"])
         if soup is None:
@@ -101,49 +102,168 @@ def origin(artifacts):
 
         cat_links = soup.find(id="mw-normal-catlinks")
         
-        origin_zaun = cat_links.find(title="Category: Lore of Zaun")
-        origin_piltover = cat_links.find(title="Category: Lore of Piltover")
+        origin_zaun = cat_links.find(title="Category:Lore of Zaun")
+        origin_piltover = cat_links.find(title="Category:Lore of Piltover")
         
         if origin_zaun is not None:
             if artifact not in zaun_total:
-                zaun_total.append(artifact)
+                zaun_total.append(artifact.get("format"))
             if origin_piltover is None:
                 if artifact not in zaun_alone:
-                    zaun_alone.append(artifact)
+                    zaun_alone.append(artifact.get("format"))
             else:
                 if artifact not in piltover_total:
-                    piltover_total.append(artifact)
+                    piltover_total.append(artifact.get("format"))
                 if artifact not in both:
-                    both.append(artifact) 
+                    both.append(artifact.get("format")) 
         elif origin_piltover is not None:
             if artifact not in piltover_total:
-                piltover_total.append(artifact)
+                piltover_total.append(artifact.get("format"))
             if artifact not in piltover_alone:
-                piltover_alone.append(artifact)
+                piltover_alone.append(artifact.get("format"))
         else:
                 return artifacts ## really unsure about this line
 
-        print(artifact_format)
-
     return
 
-
-
 # make counts
-# def count_formats(artifacts):
-    # for artifact in artifacts:
 
+def count(formats):
+    quantities = {}
+    short_story_count = 0
 
-# make table
+    for entry in formats:
+        if "Short Story" in entry:
+            short_story_count = short_story_count + 1
+        elif entry not in quantities:
+            amount = formats.count(entry)
+            if formats.count(entry) is None:
+                amount = 0
+            quantities[entry] = amount
 
+    quantities["Short Story"] = short_story_count
+
+    return quantities
+
+# get content??
 
 zaun_page = fetch_soup(ZAUN_LORE_URL)
 zaun_artifacts = scrape_artifacts(zaun_page, ZAUN_LORE_URL)
-# print(zaun_artifacts)
 origin(zaun_artifacts)
 
 piltover_page = fetch_soup(PILTOVER_LORE_URL)
 piltover_artifacts = scrape_artifacts(piltover_page, PILTOVER_LORE_URL)
 origin(piltover_artifacts)
 
-# print(zaun_total)
+total_z_count = count(zaun_total)
+total_p_count = count(piltover_total)
+solely_z_count = count(zaun_alone)
+solely_p_count = count(piltover_alone)
+overlap_count = count(both)
+
+# make list of all possible formats
+
+zaun_formats = total_z_count.keys()
+piltover_formats = total_p_count.keys()
+all_formats = zaun_formats
+
+for element in piltover_formats:
+    if element not in zaun_formats:
+        all_formats.append(element)
+
+# make table
+
+table = Table(title="The Format of Lore for Zaun & Piltover")
+table.add_column("Format")
+table.add_column("Solely Zaun", style="magenta")
+table.add_column("Zaun Total", style="green3")
+table.add_column("Overlap", style="blue")
+table.add_column("Piltover Total", style="gold1")
+table.add_column("Solely Piltover", style="red")
+table.add_column("Total")
+
+data = []
+
+for form in all_formats:
+    if form == "":
+        format_name = "Unlabeled"
+    else:
+        format_name = form
+    
+    if solely_z_count.get(form) is None:
+        just_zaun = 0
+    else:
+        just_zaun = solely_z_count.get(form)
+    
+    if overlap_count.get(form) is None:
+        both_regions = 0
+    else:
+        both_regions = overlap_count.get(form)
+
+    if solely_p_count.get(form) is None:
+        just_piltover = 0
+    else:
+        just_piltover = solely_p_count.get(form)
+
+    total = just_zaun + both_regions + just_piltover
+
+    format_row = {
+        "format": format_name,
+        "solely zaun": str(solely_z_count.get(form)),
+        "zaun total": str(total_z_count.get(form)),
+        "overlap": str(overlap_count.get(form)),
+        "piltover total": str(total_p_count.get(form)),
+        "solely piltover": str(solely_p_count.get(form)),
+        "total": str(total)
+    }
+
+    data.append(format_row)
+
+    table.add_row(
+        format_row["format"],
+        format_row["solely zaun"],
+        format_row["zaun total"],
+        format_row["overlap"],
+        format_row["piltover total"],
+        format_row["solely piltover"],
+        format_row["total"],
+    )
+
+totals_row = {
+    "format": "Total",
+    "solely zaun": str(zaun_alone.index(zaun_alone[-1]) + 1),
+    "zaun total": str(zaun_total.index(zaun_total[-1]) + 1),
+    "overlap": str(both.index(both[-1]) + 1),
+    "piltover total": str(piltover_total.index(piltover_total[-1]) + 1),
+    "solely piltover": str(piltover_alone.index(piltover_alone[-1]) + 1),
+    "total": str(
+        (zaun_alone.index(zaun_alone[-1]) + 1)
+        +
+        (zaun_total.index(zaun_total[-1]) + 1)
+        +
+        (both.index(both[-1]) + 1)
+        +
+        (piltover_total.index(piltover_total[-1]) + 1)
+        +
+        (piltover_alone.index(piltover_alone[-1]) + 1) 
+    )
+}
+
+data.append(totals_row)
+
+table.add_row(
+    totals_row["format"],
+    totals_row["solely zaun"],
+    totals_row["zaun total"],
+    totals_row["overlap"],
+    totals_row["piltover total"],
+    totals_row["solely piltover"],
+    totals_row["total"],
+)
+
+console.print(table)
+
+with open(RESULTS_OUTPUT, "w", newline="", encoding="utf-8") as file:
+		writer = csv.DictWriter(file, fieldnames=data[0].keys())
+		writer.writeheader()
+		writer.writerows(data)
