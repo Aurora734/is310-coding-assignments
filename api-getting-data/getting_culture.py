@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.table import Table
-
+import csv
 
 console = Console()
 
@@ -17,7 +17,7 @@ OTHER_API_SPECIES_URL = "https://ghibliapi.vercel.app/species"
 HEADERS = {
     "User-Agent": "is310-course/1.0 (https://Aurora734.github.io; auroraj3@illinois.edu)"
 }
-
+RESULTS_OUTPUT = "dragon_comparison.csv"
 
 # MediaWiki API
 
@@ -113,44 +113,39 @@ page = fandom_dragons["parse"]
 html = page["text"]["*"]
 soup = BeautifulSoup(html, "html.parser")
 
-# attempt 1 at parsing this horribly organized html
-'''
+appearances = soup.find(id="Appearances")
+h2_appearances = appearances.find_parent("h2")
+
 fandom_dragon_films = []
-for thing in heading3:
-    # print(type(thing))
-    if thing == "mw-headline":
-        fandom_dragon_films.append(thing)
-'''
 
-# attempt 2
-'''
-heading3 = soup.find("h3")
-id = heading3.find("id")
+for next_heading in h2_appearances.find_all_next(["h2", "h3"]):
+    # A new major section means Appearances has ended.
+    if next_heading.name == "h2":
+        break
 
-console.print(id)
-'''
+    # Use the headline span to exclude the heading's edit link.
+    headline = next_heading.find(class_="mw-headline")
+    if headline is None:
+        headline = next_heading
 
-# attempt 3 -- I have no clue what to do at this point
-'''
-please_work = soup.find("h3").child("span").child("a")
+    fandom_dragon_films.append(
+        headline.get_text(" ", strip=True)
+    )
 
-console.print(please_work) # test
-'''
-
+console.print("[magenta]Fandom dragon films:[/magenta]", fandom_dragon_films)
 
 # let's pretend I got the Fandom dragon films to work and they are held in the following list
-fandom_dragon_films = []
 for film in fandom_dragon_films:
      if film not in indie_dragon_films:
           dragon_films.append(film)
 
-dragon_films = dragon_films.sort()
+dragon_films.sort()
 console.print(dragon_films) # to double check
 
 table = Table(title="Comparing Lists of Dragon Film Appearances")
 table.add_column("API")
 for film in dragon_films:
-     table.addcolumn(film, style='green')
+     table.add_column(film, style='green')
 
 def analyze_film_list(list, api_name):
      list_booleans = {
@@ -172,23 +167,29 @@ data = []
 data.append(fandom_booleans)
 data.append(indie_booleans)
 
+console.print(fandom_booleans)
+console.print(indie_booleans)
+
 table.add_row(
-     fandom_booleans['API'],
-     fandom_booleans[''],
-     fandom_booleans[''],
-     fandom_booleans[''],
-     fandom_booleans[''],
-     fandom_booleans[''],
+     str(fandom_booleans['API']),
+     str(fandom_booleans['Castle in the Sky']),
+     str(fandom_booleans['Pom Poko']),
+     str(fandom_booleans['Spirited Away']),
+     str(fandom_booleans['Tales from Earthsea']),
+     str(fandom_booleans['The Tale of the Princess Kaguya']),
 )
 
 table.add_row(
-     indie_booleans['API'],
-     indie_booleans[''],
-     indie_booleans[''],
-     indie_booleans[''],
-     indie_booleans[''],
-     indie_booleans[''],
+     str(indie_booleans['API']),
+     str(indie_booleans['Castle in the Sky']),
+     str(indie_booleans['Pom Poko']),
+     str(indie_booleans['Spirited Away']),
+     str(indie_booleans['Tales from Earthsea']),
+     str(indie_booleans['The Tale of the Princess Kaguya']),
 )
+
+# make table appear
+console.print(table)
 
 with open(RESULTS_OUTPUT, "w", newline="", encoding="utf-8") as file:
 		writer = csv.DictWriter(file, fieldnames=data[0].keys())
