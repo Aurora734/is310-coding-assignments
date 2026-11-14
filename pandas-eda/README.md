@@ -1,0 +1,3 @@
+The notebook "GovernorsEDA.ipynb" explores the dataset of biographical info on U.S. governors from the Responsible Datasets in Context project. In examining the different fields of the dataset, I decided to explore the ages, genders, and races/ethnicities of governors further in order to investigate the common notion that all politicians are old white men.
+
+To run the notebook, you will want your kernel to have pandas and altair installed.
